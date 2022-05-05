@@ -72,8 +72,12 @@ discordClient.on("messageCreate", async function(message) {
 
     if (command === "add_user") {
         if (args.length > 0) {
-            message.reply(await addUser(args, message.author));
+            message.reply(await addUser(args, message));
         }
+    }
+
+    if (command === "powa") {
+        message.reply(await powa(message));
     }
 
     if (command == "update_csv") {
@@ -135,7 +139,7 @@ async function addTweets(ids) {
     }
 }
 
-async function addUser(args, author) {
+async function addUser(args, message) {
     if (args.length > 3 || args.length < 2) {
         return 'wrong number of parameters. !add_user [wallet 0x] [twitter url] [discord id: optional]';
     }
@@ -153,8 +157,8 @@ async function addUser(args, author) {
         let person = await discordClient.users.fetch(discordUserId);
         discordUserName = person.username + '#' + person.discriminator;
     } else {
-        discordUserId = author.id;
-        discordUserName = author.username + '#' + author.discriminator;
+        discordUserId = message.author.id;
+        discordUserName = message.author.username + '#' + message.author.discriminator;
     }
     
     let twitterUser = await twitterClient.v2.userByUsername(args[1].replace('https://twitter.com/', ''));
@@ -181,6 +185,15 @@ async function addUser(args, author) {
     user.persist();
 
     return 'registration done! Welcome in the Luchadores Social Club <3';
+}
+
+async function powa(message) {
+    let user = await LSCUser.getUserByID(message.author.id);
+    if (user != null) {
+        let role = await message.guild.roles.fetch(process.env.LSC_ROLE_ID);
+        message.member.roles.add(role);
+        return 'LSC role added !';
+    }
 }
 
 async function refreshTwitter() {
