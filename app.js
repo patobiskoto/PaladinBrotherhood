@@ -77,6 +77,7 @@ discordClient.on("messageCreate", async function(message) {
     }
 
     if (command === "powa") {
+        if (message.guild === null) return;
         message.reply(await powa(message));
     }
 
@@ -141,7 +142,8 @@ async function addTweets(ids) {
 
 async function addUser(args, message) {
     if (args.length > 3 || args.length < 2) {
-        return 'wrong number of parameters. !add_user [wallet 0x] [twitter url] [discord id: optional]';
+        return 'wrong number of parameters. !add_user [wallet 0x] [twitter url]';
+        //return 'wrong number of parameters. !add_user [wallet 0x] [twitter url] [discord id: optional]';
     }
     if (!args[0].startsWith('0x')) {
         return 'first paremeter must be your 0x';
@@ -184,7 +186,8 @@ async function addUser(args, message) {
 
     user.persist();
 
-    return 'registration done! Welcome in the Luchadores Social Club <3';
+    return "¡ Felicidades Luchacho, you have been successfully registered 🥳 !\r"
+        +"Don't forget the last step to join the Luchadores Social Club, by typing the command !powa in https://discord.com/channels/841546628325572618/971736757995458590";
 }
 
 async function powa(message) {
@@ -192,7 +195,9 @@ async function powa(message) {
     if (user != null) {
         let role = await message.guild.roles.fetch(process.env.LSC_ROLE_ID);
         message.member.roles.add(role);
-        return 'LSC role added !';
+        return `¡ Bienvenido <@${message.author.id}> to the Luchadores Social Club !`;
+    } else {
+        return 'You are not registered in the Luchadores Social Club. Please use !add_user [wallet] [twitter url]'
     }
 }
 
