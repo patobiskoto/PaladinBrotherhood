@@ -48,6 +48,7 @@ discordClient.on('ready', async () => {
     console.log(`Logged in as ${discordClient.user.tag}!`);
 });
 
+
 discordClient.on("messageCreate", async function(message) { 
     if (message.author.bot) return;
     if (!message.content.startsWith(prefix)) return;
@@ -81,26 +82,6 @@ discordClient.on("messageCreate", async function(message) {
         message.reply(await powa(message));
     }
 
-    if (command == "update_csv") {
-        if (!isWhiteListed(message.author.id)) return;
-        if (message.attachments.size == 1) {
-           let entry = message.attachments.first();
-           if (entry.contentType == 'text/csv; charset=utf-8') {
-               console.log('update_csv');
-               https.get(entry.url, (res) => {
-                   let csvFile = fs.createWriteStream(entry.name);
-                   res.pipe(csvFile);
-                   csvFile.on('finish', () => {
-                       csvFile.close();
-                       console.log(entry.name + ' download completed');
-                       LSCUser.handleCSV(entry.name);
-                   });
-               });
-           }
-        }
-        message.reply('users updated');
-    }
-
     if (command == "coca_total") {
         if (!isWhiteListed(message.author.id)) return;
         let users = await LSCUser.getAllUsers();
@@ -131,120 +112,5 @@ function isWhiteListed(id) {
     return false;
 }
 
-async function addTweets(ids) {
-    for (let id of ids) {
-        let tweet = await twitterClient.v2.singleTweet(id, { 'tweet.fields': ['author_id', 'created_at'], 'user.fields': ['username'] });
-        let author = await twitterClient.v2.user(tweet.data.author_id);
-        let tweetm = new Tweet(author, tweet);
-        tweetm.persist();
-    }
-}
-
-async function addUser(args, message) {
-    if (args.length > 3 || args.length < 2) {
-        return 'wrong number of parameters. !add_user [wallet 0x] [twitter url]';
-        //return 'wrong number of parameters. !add_user [wallet 0x] [twitter url] [discord id: optional]';
-    }
-    if (!args[0].startsWith('0x')) {
-        return 'first paremeter must be your 0x';
-    } 
-    if (!args[1].startsWith('https://twitter.com/')) {
-        return 'second paremeter must be your twitter profile url';
-    }
-    let userWallet = args[0];
-    let discordUserId, discordUserName;
-   
-    if (args[2] != undefined) {
-        discordUserId = args[2];
-        let person = await discordClient.users.fetch(discordUserId);
-        discordUserName = person.username + '#' + person.discriminator;
-    } else {
-        discordUserId = message.author.id;
-        discordUserName = message.author.username + '#' + message.author.discriminator;
-    }
-    
-    let twitterUser = await twitterClient.v2.userByUsername(args[1].replace('https://twitter.com/', ''));
-    
-    let persistedUser = await LSCUser.getUserByID(discordUserId);
-    if (persistedUser != undefined) {
-        return 'user ' + discordUserName + ' already registered';
-    }
-
-    let isOwner = await Luchadores.isOwnerOfALuchador(userWallet);
-    if (!isOwner) {
-        return 'you must have at least 1 luchador';
-    }
-
-    let user = new LSCUser(
-        userWallet,
-        twitterUser.data.username,
-        twitterUser.data.id,
-        discordUserName,
-        discordUserId,
-        new Date().toISOString().split('T')[0]
-    );
-
-    user.persist();
-
-    return "¡ Felicidades Luchacho, you have been successfully registered 🥳 !\r"
-        +"Don't forget the last step to join the Luchadores Social Club, by typing the command !powa in https://discord.com/channels/841546628325572618/971736757995458590";
-}
-
-async function powa(message) {
-    let user = await LSCUser.getUserByID(message.author.id);
-    if (user != null) {
-        let role = await message.guild.roles.fetch(process.env.LSC_ROLE_ID);
-        message.member.roles.add(role);
-        return `¡ Bienvenido <@${message.author.id}> to the Luchadores Social Club !`;
-    } else {
-        return 'You are not registered in the Luchadores Social Club. Please use !add_user [wallet] [twitter url]'
-    }
-}
-
-async function refreshTwitter() {
-    let allTweets = await Tweet.getAllTweets();
-    let LSCUsers = await LSCUser.getAllUsers();
-    
-    let parsedTweets = [];
-
-    for (let i = 0; i < allTweets.length; i++) {
-        let twitterLikers = await twitterClient.v2.tweetLikedBy(allTweets[i].tweet_id, { asPaginator: true });
-        let twitterRT = await twitterClient.v2.tweetRetweetedBy(allTweets[i].tweet_id, { asPaginator: true });
-        parsedTweets.push({
-            id: allTweets[i].tweet_id,
-            likers: await getValidLSCUser(twitterLikers, LSCUsers),
-            rt: await getValidLSCUser(twitterRT, LSCUsers)
-        });        
-    }
-    
-    for await (let parsedTweet of parsedTweets) {
-        for (let liker of parsedTweet.likers) {
-            let userTweet = await LSCUserTweet.getUserTweet(liker.discord_id, parsedTweet.id, process.env.ACTION_LIKE);
-            if (userTweet == undefined || userTweet.length == 0) {
-                let pUsersTweets = new LSCUserTweet(parsedTweet.id, liker.discord_id, process.env.ACTION_LIKE);
-                pUsersTweets.insert();
-            }
-        }
-        for (let rt of parsedTweet.rt) {
-            let userTweet = await LSCUserTweet.getUserTweet(rt.discord_id, parsedTweet.id, process.env.ACTION_RT);
-            if (userTweet == undefined || userTweet.length == 0) {
-                let pUsersTweets = new LSCUserTweet(parsedTweet.id, rt.discord_id, process.env.ACTION_RT);
-                pUsersTweets.insert();
-            }
-        }
-    }
-}
-
-async function getValidLSCUser(users, LSCUsers) {
-    let validLSCUsers = [];
-    for await (let user of users) {
-        for (let LSCUser of LSCUsers) {
-            if (LSCUser.twitter_id == user.id) {
-                validLSCUsers.push(LSCUser);
-            }
-        }
-    }
-    return validLSCUsers;
-}
 
 discordClient.login(process.env.DISCORD_TOKEN);

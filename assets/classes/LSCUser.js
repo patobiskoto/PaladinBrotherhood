@@ -1,16 +1,15 @@
 const fs = require("fs");
-let db;
-let LSCUserTweet;
+const { db } = require('../db/db');
+const LSCUserTweet = require('./LSCUserTweet');
 const csvParser = require("csv-parser");
 
-module.exports = (_db) => {
-    db = _db;
-    LSCUserTweet = require('./LSCUserTweet')(_db);
-    return LSCUser;
-}
-
+/*
+    LSCUser class. 
+    Reprensents a persisted Luchadores Social Club user
+*/
 class LSCUser {
 
+    // Constructor
     constructor(_wallet, _twitter_username, _twitter_id, _discord_username, _discord_id, _registration_date) {
         this.wallet = _wallet;
         this.twitter_username = _twitter_username;
@@ -20,6 +19,7 @@ class LSCUser {
         this.registration_date = _registration_date;
     }
 
+    // Persist if needed, else update
     async persist() {
         if (await this.isAlreadyPersisted()) {
             await this.update();
@@ -28,6 +28,7 @@ class LSCUser {
         }
     }
 
+    // Check if current LSCUser is already persisted
     async isAlreadyPersisted() {
         console.log('check if user already persisted ' + this.discord_username);
         let pUser = await LSCUser.getUserByID(this.discord_id);
@@ -38,6 +39,7 @@ class LSCUser {
         }
     }
 
+    // Instert new LSCUser
     async insert() {
         console.log('insert user ' + this.discord_username);
         db.any(
@@ -51,6 +53,7 @@ class LSCUser {
             });
     }
 
+    // Update current LSCUser
     async update() {
         console.log('update user ' + this.discord_username);
         db.any(
@@ -64,6 +67,7 @@ class LSCUser {
             });
     }
 
+    // Get current LSCUser coca
     async getCoca() {
         let coca = 0;
         let userTweets = await LSCUserTweet.getProvidedUserTweets(this.discord_id);
@@ -83,6 +87,7 @@ class LSCUser {
         return coca;
     }
 
+    // Find user by ID
     static async getUserByID(_discord_id) {
         console.log('search user ' + _discord_id);
         let pUser = await db.any('select * from public.users where discord_id = $1', _discord_id);
@@ -103,6 +108,7 @@ class LSCUser {
         
     }
 
+    // Handle premint CSV file. NOT USED
     static async handleCSV(_file) {
         if (_file == undefined) {
             console.log('CSV file undefined');
@@ -134,6 +140,7 @@ class LSCUser {
             });
     }
 
+    // Find all LSCUsers
     static async getAllUsers() {
         let dbUsers = await db.any('select * from public.users');
         let lscUsers = [];
@@ -150,4 +157,17 @@ class LSCUser {
         return lscUsers;
     }
 
+    static async getValidLSCUser(users, LSCUsers) {
+        let validLSCUsers = [];
+        for await (let user of users) {
+            for (let LSCUser of LSCUsers) {
+                if (LSCUser.twitter_id == user.id) {
+                    validLSCUsers.push(LSCUser);
+                }
+            }
+        }
+        return validLSCUsers;
+    }
 }
+
+module.exports = LSCUser;

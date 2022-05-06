@@ -1,12 +1,12 @@
-let db;
+const { db } = require('../db/db');
 
-module.exports = (_db) => {
-    db = _db;
-    return Tweet;
-}
-
+/*
+    Tweet class.
+    Used to register tweets to track for coca calculation
+ */
 class Tweet {
 
+    // Constructor
     constructor(_author, _tweet) {
         this.author_id = _author.data.id,
         this.author_name = _author.data.name,
@@ -16,6 +16,7 @@ class Tweet {
         this.tweet_text = _tweet.data.text
     }
 
+    // Persist if needed, else update
     async persist() {
         if (await this.isAlreadyPersisted()) {
             await this.update();
@@ -24,6 +25,7 @@ class Tweet {
         }
     }
 
+    // Create the new Tweet
     async insert() {
         console.log('insert tweet ' + this.tweet_id);
         db.any(
@@ -37,6 +39,7 @@ class Tweet {
             });
     }
 
+    // Update the tweet
     async update() {
         console.log('update tweet ' + this.tweet_id);
         db.any(
@@ -50,6 +53,7 @@ class Tweet {
             });
     }
 
+    // Check if current tweet is already persisted
     async isAlreadyPersisted() {
         console.log('check if tweet already persisted ' + this.tweet_id);
         let pTweet = await db.any('select * from public.tweets where tweet_id = $1', this.tweet_id);
@@ -60,8 +64,11 @@ class Tweet {
         }
     }
 
+    // Get all tracked tweets
     static async getAllTweets() {
         return await db.any('select * from public.tweets');
     }
 
 }
+
+module.exports = Tweet;
