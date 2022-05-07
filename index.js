@@ -25,6 +25,8 @@ discordClient.on(Constants.Events.INTERACTION_CREATE, async interaction => {
 	if (!command) return;
 
 	try {
+		
+		console.log(interaction.createdAt.toISOString() + ' - user: ' + interaction.user.username + '#' + interaction.user.discriminator + ' cmd: ' + interaction.commandName);
 		await command.execute(interaction);
 	} catch (error) {
 		console.error(error);
