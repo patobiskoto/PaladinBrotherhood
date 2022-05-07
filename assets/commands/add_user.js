@@ -73,7 +73,7 @@ module.exports = {
         );
     
         // Persist the new LSCUser
-        user.persist();
+        await user.persist();
 
         // Check if the user is well persisted and add the LSC discord role
         user = await LSCUser.getUserByID(interaction.user.id);

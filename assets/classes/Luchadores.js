@@ -24,6 +24,33 @@ class Luchadores {
         } 
     }
 
+    // check if provided wallet is owner of provided nft id
+    static async isOwnerOf(address, id) {
+        console.log('Check if ' + address + ' is owner of ' + id);
+        try {
+            let result = await contractLucha.functions.ownerOf(id);
+            console.log(result[0]);
+            if (result != undefined && result[0].toLowerCase() == address.toLowerCase()) {
+                return true;
+            } else {
+                return false;
+            }
+        } catch (err) {
+            throw new Error('Error during blockchain query : ' + err.message);
+        } 
+    }
+
+    // Get SVG
+    static async getImageData(id) {
+        console.log('Get image data for Luchador#' + id);
+        try {
+            let result = await contractLucha.functions.imageData(id);
+            return result[0];
+        } catch (err) {
+            throw new Error('Error during blockchain query : ' + err.message);
+        } 
+    }
+
 }
 
 module.exports = Luchadores;

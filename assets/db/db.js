@@ -6,11 +6,11 @@ const pgpInitOptions = {
         }
 
         if (e.query) {
-            res.json(error(err.message))
+            console.log(err.message);
         }
 
         if (e.ctx) {
-            res.json(error(err.message))
+            console.log(err.message);
         }
     }
 };
