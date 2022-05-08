@@ -8,8 +8,8 @@ const LSCUser = require('../classes/LSCUser');
 module.exports = {
 	data: new SlashCommandBuilder()
 		.setName('coca')
-		.setDescription('Get your COCA')
-		.setDefaultPermission(false),
+		.setDescription('Get your COCA'),
+		//.setDefaultPermission(false),
 	async execute(interaction) {
         let user = await LSCUser.getUserByID(interaction.user.id);
 		await interaction.reply({ content: 'Your have ' + await user.getCoca() + ' <:coca_leaf:972094774582587393>', ephemeral: true });

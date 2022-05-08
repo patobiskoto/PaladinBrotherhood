@@ -8,8 +8,8 @@ const TournamentRegistration = require('../classes/TournamentRegistration');
 module.exports = {
 	data: new SlashCommandBuilder()
 		.setName('tournament_data_count')
-		.setDescription('Get number of Luchadores registered to the tournament')
-		.setDefaultPermission(false),
+		.setDescription('Get number of Luchadores registered to the tournament'),
+		//.setDefaultPermission(false),
 	async execute(interaction) {
 		await interaction.reply({ content: 'Registrations = ' + await TournamentRegistration.getNumberOfRegistered(), ephemeral: true });
 	}

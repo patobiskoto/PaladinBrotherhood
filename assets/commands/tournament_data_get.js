@@ -25,8 +25,8 @@ module.exports = {
             option.setName('nft_id')
                 .setDescription('The NFD ID for whom you want the data')
                 .setRequired(false)
-        )
-		.setDefaultPermission(false),
+        ),
+		//.setDefaultPermission(false),
 	async execute(interaction) {
         let user = interaction.options.getUser('user');
 		let wallet = interaction.options.getString('wallet');

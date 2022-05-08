@@ -18,8 +18,8 @@ module.exports = {
             option.setName('url')
                 .setDescription('Tweet URL')
                 .setRequired(true)
-        )
-        .setDefaultPermission(false),
+        ),
+        //.setDefaultPermission(false),
     
     async execute(interaction) {
         // Find tweet ID

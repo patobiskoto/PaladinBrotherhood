@@ -8,8 +8,8 @@ const LSCUser = require('../classes/LSCUser');
 module.exports = {
 	data: new SlashCommandBuilder()
 		.setName('coca_total')
-		.setDescription('Get the COCA ranking')
-		.setDefaultPermission(false),
+		.setDescription('Get the COCA ranking'),
+		//.setDefaultPermission(false),
 	async execute(interaction) {
 
 		// Get all LSC users

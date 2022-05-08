@@ -24,8 +24,8 @@ module.exports = {
             option.setName('twitter')
                 .setDescription('The full URL to your Twitter profile')
                 .setRequired(true)
-        )
-        .setDefaultPermission(false),
+        ),
+        //.setDefaultPermission(false),
     
     async execute(interaction) {
         // Check wallet parameter

@@ -95,8 +95,8 @@ module.exports = {
 				.addChoice('Prowess', 'Prowess')
 				.addChoice('Speedster', 'Speedster')
 				.addChoice('Last Stand', 'Last Stand')
-        )
-		.setDefaultPermission(false),
+        ),
+		//.setDefaultPermission(false),
 	async execute(interaction) {
 
 		// Find user's filled parameters

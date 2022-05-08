@@ -15,8 +15,8 @@ module.exports = {
 	data: new SlashCommandBuilder()
 
 		.setName('refresh_twitter')
-		.setDescription('Refresh Twitter interactions to handle LSC users actions (Like, RT) and update the COCA')
-        .setDefaultPermission(false),
+		.setDescription('Refresh Twitter interactions to handle LSC users actions (Like, RT) and update the COCA'),
+        //.setDefaultPermission(false),
     
     async execute(interaction) {
         const start = performance.now()
