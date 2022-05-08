@@ -9,7 +9,7 @@ const TournamentRegistration = require('../classes/TournamentRegistration');
 module.exports = {
 	data: new SlashCommandBuilder()
 		.setName('tournament_registration')
-		.setDescription('tests')
+		.setDescription('Register to the next community tournament !')
 		.addStringOption(option => 
             option.setName('wallet')
                 .setDescription('Your 0x. Not compatible with ENS')
