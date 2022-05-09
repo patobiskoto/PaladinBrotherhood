@@ -86,7 +86,8 @@ module.exports = {
                 content: "¡ Felicidades " + interaction.user.username
                     + " ! You can stretch out your legs, light a cigar, drink your glass of Tequila cooled by an ice cube, you're now in the Luchadores Social Club <:tequila_lsc:972095662072168510>",
                 ephemeral: true 
-            });
+            }
+        );
     },
         
 };
