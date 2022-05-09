@@ -3,7 +3,7 @@ require("dotenv").config();
 const fs = require('node:fs');
 const { Client, Intents, Collection, Constants } = require('discord.js');
 
-const discordClient = new Client({ partials: ["CHANNEL"], intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES, Intents.FLAGS.DIRECT_MESSAGES, Intents.FLAGS.GUILD_PRESENCES] });
+const discordClient = new Client({ partials: ["CHANNEL"], intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES, Intents.FLAGS.GUILD_PRESENCES] });
 
 discordClient.commands = new Collection();
 const commandFiles = fs.readdirSync('./assets/commands').filter(file => file.endsWith('.js'));
@@ -19,6 +19,7 @@ discordClient.once(Constants.ShardEvents.READY, async () => {
 
 discordClient.on(Constants.Events.INTERACTION_CREATE, async interaction => {
 	if (!interaction.isCommand()) return;
+	if (interaction.channel.type == 'DM') return;
 
 	const command = discordClient.commands.get(interaction.commandName);
 
