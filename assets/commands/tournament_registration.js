@@ -187,8 +187,6 @@ module.exports = {
 		// persist the new tournament registration
 		await registration.persist();
 
-		await interaction.reply("¡ Felicidades " + interaction.user.username + " your are now registered for the next community tournament !");
-
 		await interaction.reply(
             { 
                 content: "¡ Felicidades " + interaction.user.username + " your are now registered for the next community tournament !",
