@@ -81,10 +81,12 @@ module.exports = {
             let role = await interaction.guild.roles.fetch(process.env.LSC_ROLE_ID);
             interaction.member.roles.add(role);
         }
-
-        await interaction.reply("¡ Felicidades " + interaction.user.username 
-            + " ! You can stretch out your legs, light a cigar, drink your glass of Tequila cooled by an ice cube, you're now in the Luchadores Social Club <:tequila_lsc:972095662072168510>");
-
+        await interaction.reply(
+            { 
+                content: "¡ Felicidades " + interaction.user.username
+                    + " ! You can stretch out your legs, light a cigar, drink your glass of Tequila cooled by an ice cube, you're now in the Luchadores Social Club <:tequila_lsc:972095662072168510>",
+                ephemeral: true 
+            });
     },
         
 };
