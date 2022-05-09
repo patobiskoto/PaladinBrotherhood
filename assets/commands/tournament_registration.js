@@ -22,22 +22,22 @@ module.exports = {
         )
         .addIntegerOption(option => 
             option.setName('strength')
-                .setDescription('How much strength ? (between 0 to 80)')
+                .setDescription('How much strength ? (between 1 to 80)')
                 .setRequired(true)
         )
 		.addIntegerOption(option => 
             option.setName('defense')
-                .setDescription('How much defense ? (between 0 to 80)')
+                .setDescription('How much defense ? (between 1 to 80)')
                 .setRequired(true)
         )
 		.addIntegerOption(option => 
             option.setName('skill')
-                .setDescription('How much skill ? (between 0 to 80)')
+                .setDescription('How much skill ? (between 1 to 80)')
                 .setRequired(true)
         )
 		.addIntegerOption(option => 
             option.setName('speed')
-                .setDescription('How much speed ? (between 0 to 80)')
+                .setDescription('How much speed ? (between 1 to 80)')
                 .setRequired(true)
         )
 		.addStringOption(option => 
@@ -138,25 +138,25 @@ module.exports = {
 		} 
 
 		// Validate all numeric stats
-		if (strength < 0 || strength > 80) {
+		if (strength < 1 || strength > 80) {
 			await interaction.reply({ content: 'strength must be between 0 and 80', ephemeral: true });
 			return;
 		}
-		if (defense < 0 || defense > 80) {
+		if (defense < 1 || defense > 80) {
 			await interaction.reply({ content: 'defense must be between 0 and 80', ephemeral: true });
 			return;
 		}
-		if (skill < 0 || skill > 80) {
+		if (skill < 1 || skill > 80) {
 			await interaction.reply({ content: 'skill must be between 0 and 80', ephemeral: true });
 			return;
 		}
-		if (speed < 0 || speed > 80) {
+		if (speed < 1 || speed > 80) {
 			await interaction.reply({ content: 'speed must be between 0 and 80', ephemeral: true });
 			return;
 		}
 
 		// All stats can exceed 88
-		if ((strength + defense + skill + speed) >= 88) {
+		if (!((strength + defense + skill + speed) == 88)) {
 			await interaction.reply({ content: 'Maximum stats point is 84', ephemeral: true });
 			return;
 		}
