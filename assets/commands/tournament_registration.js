@@ -155,8 +155,8 @@ module.exports = {
 			return;
 		}
 
-		// All stats can exceed 84
-		if ((strength + defense + skill + speed) >= 84) {
+		// All stats can exceed 88
+		if ((strength + defense + skill + speed) >= 88) {
 			await interaction.reply({ content: 'Maximum stats point is 84', ephemeral: true });
 			return;
 		}
