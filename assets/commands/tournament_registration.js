@@ -139,25 +139,25 @@ module.exports = {
 
 		// Validate all numeric stats
 		if (strength < 1 || strength > 80) {
-			await interaction.reply({ content: 'strength must be between 0 and 80', ephemeral: true });
+			await interaction.reply({ content: 'strength must be between 1 and 80', ephemeral: true });
 			return;
 		}
 		if (defense < 1 || defense > 80) {
-			await interaction.reply({ content: 'defense must be between 0 and 80', ephemeral: true });
+			await interaction.reply({ content: 'defense must be between 1 and 80', ephemeral: true });
 			return;
 		}
 		if (skill < 1 || skill > 80) {
-			await interaction.reply({ content: 'skill must be between 0 and 80', ephemeral: true });
+			await interaction.reply({ content: 'skill must be between 1 and 80', ephemeral: true });
 			return;
 		}
 		if (speed < 1 || speed > 80) {
-			await interaction.reply({ content: 'speed must be between 0 and 80', ephemeral: true });
+			await interaction.reply({ content: 'speed must be between 1 and 80', ephemeral: true });
 			return;
 		}
 
 		// All stats can exceed 88
 		if (!((strength + defense + skill + speed) == 88)) {
-			await interaction.reply({ content: 'Maximum stats point is 84', ephemeral: true });
+			await interaction.reply({ content: 'Maximum stats point is 88', ephemeral: true });
 			return;
 		}
 
