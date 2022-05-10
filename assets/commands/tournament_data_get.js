@@ -48,7 +48,12 @@ module.exports = {
 			return;
 		}
 
-		await interaction.reply({ embeds: [await prepareResponse(pRegistration)], ephemeral: true })
+		if (pRegistration != undefined) {
+			await interaction.reply({ embeds: [await prepareResponse(pRegistration)], ephemeral: true });
+		} else {
+			await interaction.reply({ content: 'Registration not found !', ephemeral: true });
+			return;
+		}
 	}
 };
 
