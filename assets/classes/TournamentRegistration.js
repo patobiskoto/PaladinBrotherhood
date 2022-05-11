@@ -89,6 +89,12 @@ class TournamentRegistration {
         return data[0].count;
     }
 
+    // Returns all registrations done
+    static async getAllRegistrations() {
+        let data = await db.any('select * from public.tournament_registrations')
+        return data;
+    }
+
 }
 
 module.exports = TournamentRegistration;
