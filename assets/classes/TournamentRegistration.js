@@ -1,4 +1,5 @@
 const { db } = require('../db/db');
+const { MessageEmbed } = require('discord.js')
 
 /*
     TournamentRegistration class
@@ -93,6 +94,26 @@ class TournamentRegistration {
     static async getAllRegistrations() {
         let data = await db.any('select * from public.tournament_registrations')
         return data;
+    }
+
+    async prepareResponse() {
+        return new MessageEmbed()
+            .setTitle(this.discord_username)
+            .setColor(0x743cef)
+            .setThumbnail(`https://luchadores-io.s3.us-east-2.amazonaws.com/img/${this.nft_id}.png`)
+            .addFields(
+                { name: 'Wallet', value: this.wallet, inline: false },
+                { name: '#ID', value: this.nft_id, inline: false },
+                { name: 'Registration date', value: new Date(this.registration_date).toISOString().split('T')[0], inline: false },
+                { name: 'Strength', value: this.strength, inline: false },
+                { name: 'Defense', value: this.defense, inline: false },
+                { name: 'Skill', value: this.skill, inline: false },
+                { name: 'Speed', value: this.speed, inline: false },
+                { name: '1st Skill', value: this.skill_1, inline: false },
+                { name: '2nd Skill', value: this.skill_2, inline: false },
+                { name: '3rd Skill', value: this.skill_3, inline: false },
+                { name: 'Passive Skill', value: this.passive_skill, inline: false }
+            );
     }
 
 }

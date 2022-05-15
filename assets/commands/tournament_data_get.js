@@ -1,7 +1,6 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
 const { MessageEmbed } = require('discord.js')
 const TournamentRegistration = require('../classes/TournamentRegistration');
-const Luchadores = require('../classes/Luchadores');
 
 /*
 	Command /tournament_data_get [user]
@@ -49,30 +48,10 @@ module.exports = {
 		}
 
 		if (pRegistration != undefined) {
-			await interaction.reply({ embeds: [await prepareResponse(pRegistration)], ephemeral: true });
+			await interaction.reply({ embeds: [await pRegistration.prepareResponse()], ephemeral: true });
 		} else {
 			await interaction.reply({ content: 'Registration not found !', ephemeral: true });
 			return;
 		}
 	}
 };
-
-async function prepareResponse(registration) {
-	return new MessageEmbed()
-		.setTitle(registration.discord_username)
-		.setColor(0x743cef)
-		.setThumbnail(`https://luchadores-io.s3.us-east-2.amazonaws.com/img/${registration.nft_id}.png`)
-		.addFields(
-			{ name: 'Wallet', value: registration.wallet, inline: false },
-			{ name: '#ID', value: registration.nft_id, inline: false },
-			{ name: 'Registration date', value: new Date(registration.registration_date).toISOString().split('T')[0], inline: false },
-			{ name: 'Strength', value: registration.strength, inline: false },
-			{ name: 'Defense', value: registration.defense, inline: false },
-			{ name: 'Skill', value: registration.skill, inline: false },
-			{ name: 'Speed', value: registration.speed, inline: false },
-			{ name: '1st Skill', value: registration.skill_1, inline: false },
-			{ name: '2nd Skill', value: registration.skill_2, inline: false },
-			{ name: '3rd Skill', value: registration.skill_3, inline: false },
-			{ name: 'Passive Skill', value: registration.passive_skill, inline: false }
-		);
-}
