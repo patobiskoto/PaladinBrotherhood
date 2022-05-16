@@ -20,6 +20,7 @@ module.exports = {
     
     async execute(interaction) {
         const start = performance.now()
+        await interaction.reply({ content: 'Refreshing ...', ephemeral: true });
 
         // Get all tracked Tweets
         let allTweets = await Tweet.getAllTweets();
@@ -59,7 +60,7 @@ module.exports = {
         }
 
         let duration = ((performance.now() - start)/1000).toFixed(2);
-        await interaction.reply('Refresh duration : ' + duration + ' seconds');
+        await interaction.editReply({ content: 'Refresh duration : ' + duration + ' seconds', ephemeral: true });
     },
         
 };
