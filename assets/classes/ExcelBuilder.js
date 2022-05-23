@@ -3,6 +3,7 @@ const fs = require('fs')
 const ExcelJS = require('exceljs');
 const TournamentRegistration = require('../classes/TournamentRegistration');
 const LSCUser = require('../classes/LSCUser');
+const Tweet = require('../classes/Tweet');
 
 /**
  * Class used to handle Excel reporting
@@ -10,7 +11,7 @@ const LSCUser = require('../classes/LSCUser');
 class ExcelBuilder {
 
     // Constructor
-    // Takes _report parameter. Possible values are 'tournament' or 'coca'
+    // Takes _report parameter. Possible values are 'tournament', 'coca' or tweet
     constructor(_report) {
         this.report = _report;
         this.filePath = './tmp/Export_' + _report + '_' + new Date().toISOString().split('T')[0] + '.xlsx'
@@ -62,6 +63,14 @@ class ExcelBuilder {
                 { header: 'Registration date', key: 'registration_date', width: 15 },
                 { header: 'Coca', key: 'coca', width: 10, autoFmax: 'F1'},
             ];
+        } else if (this.report == 'tweet') {
+            return [
+                { header: 'Author name', key: 'author_name', width: 30 },
+                { header: 'Author username', key: 'author_username', width: 30 },
+                { header: 'Twitter created at', key: 'tweet_created_at', width: 30 },
+                { header: 'URL', key: 'url', width: 30 },
+                { header: 'Tweet text', key: 'tweet_text', width: 200 },
+            ];
         }
     }
 
@@ -97,6 +106,21 @@ class ExcelBuilder {
                     user.wallet,
                     user.registration_date,
                     await user.getCoca()
+                ]);
+            }
+        } else if (this.report == 'tweet') {
+            let tweets = await Tweet.getAllTweets();
+            for (let tweet of tweets) {
+                rows.push([
+                    tweet.author_name,
+                    tweet.author_username,
+                    tweet.tweet_created_at,
+                    {
+                        text: `https://twitter.com/${tweet.author_username}/status/${tweet.tweet_id}`,
+                        hyperlink: `https://twitter.com/${tweet.author_username}/status/${tweet.tweet_id}`,
+                        tooltip: `https://twitter.com/${tweet.author_username}/status/${tweet.tweet_id}`
+                    },
+                    tweet.tweet_text
                 ]);
             }
         }
