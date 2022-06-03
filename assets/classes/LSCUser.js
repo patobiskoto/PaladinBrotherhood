@@ -1,6 +1,6 @@
 const fs = require("fs");
 const { db } = require('../db/db');
-const LSCUserTweet = require('./LSCUserTweet');
+const CocaCalculator = require('./CocaCalculator');
 const csvParser = require("csv-parser");
 
 /*
@@ -69,22 +69,7 @@ class LSCUser {
 
     // Get current LSCUser coca
     async getCoca() {
-        let coca = 0;
-        let userTweets = await LSCUserTweet.getProvidedUserTweets(this.discord_id);
-        for (let userTweet of userTweets) {
-            if (userTweet.action == process.env.ACTION_LIKE) {
-                coca += +process.env.COCA_LIKE_PTS;
-            } else if (userTweet.action == process.env.ACTION_RT) {
-                coca += +process.env.COCA_RT_PTS;
-            } else if (userTweet.action = process.env.ACTION_MEME) {
-                coca += +process.env.COCA_MEME_PTS;
-            } else if (userTweet.action = process.env.ACTION_FANART) {
-                coca += +process.env.COCA_FANART_PTS;
-            } else if (userTweet.action = process.env.ACTION_ZAPPER) {
-                coca += +process.env.COCA_ZAPPER_PTS;
-            }
-        }
-        return coca;
+        return await CocaCalculator.calculateCoca(this.discord_id);
     }
 
     // Find user by ID

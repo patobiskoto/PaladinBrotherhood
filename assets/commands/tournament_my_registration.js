@@ -1,5 +1,4 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
-const { MessageEmbed } = require('discord.js')
 const TournamentRegistration = require('../classes/TournamentRegistration');
 
 /*
