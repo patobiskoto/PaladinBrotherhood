@@ -20,9 +20,9 @@ discordClient.once(Constants.ShardEvents.READY, async () => {
 });
 
 // Scheduled 12h
-nodeCron.schedule('* * */12 * * *', () => {
-	Twitter.refreshTwitter();
-});
+//nodeCron.schedule('* * */12 * * *', () => {
+//	Twitter.refreshTwitter();
+//});
 
 discordClient.on(Constants.Events.INTERACTION_CREATE, async interaction => {
 	if (interaction.channel.type == 'DM') return;
