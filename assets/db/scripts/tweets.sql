@@ -1,8 +1,8 @@
--- Table: public.tweets
+-- Table: paladin.tweets
 
--- DROP TABLE IF EXISTS public.tweets;
+-- DROP TABLE IF EXISTS paladin.tweets;
 
-CREATE TABLE IF NOT EXISTS public.tweets
+CREATE TABLE IF NOT EXISTS paladin.tweets
 (
     author_name text COLLATE pg_catalog."default" NOT NULL,
     author_username text COLLATE pg_catalog."default" NOT NULL,
@@ -15,5 +15,5 @@ CREATE TABLE IF NOT EXISTS public.tweets
 
 TABLESPACE pg_default;
 
-ALTER TABLE IF EXISTS public.tweets
-    OWNER to luchadores;
+ALTER TABLE IF EXISTS paladin.tweets
+    OWNER to paladin;

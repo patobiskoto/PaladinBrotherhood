@@ -2,17 +2,17 @@ const { SlashCommandBuilder } = require('@discordjs/builders');
 const ExcelBuilder = require('../classes/ExcelBuilder')
 
 /*
-	Command /coca_total
-	Returns Excel file with all coca data
+	Command /honors_total
+	Returns Excel file with all honors data
 */
 module.exports = {
 	data: new SlashCommandBuilder()
-		.setName('coca_total')
-		.setDescription('Get the COCA ranking'),
+		.setName('honors_total')
+		.setDescription('Get the Honors ranking'),
 		//.setDefaultPermission(false),
 	async execute(interaction) {
 		await interaction.reply({ content: 'Working on the report...', ephemeral: true });
-		let excel = new ExcelBuilder('coca');
+		let excel = new ExcelBuilder('honors');
         let attachment;
         try {
             attachment = await excel.export();

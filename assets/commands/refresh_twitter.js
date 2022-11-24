@@ -10,7 +10,7 @@ module.exports = {
 	data: new SlashCommandBuilder()
 
 		.setName('refresh_twitter')
-		.setDescription('Refresh Twitter interactions to handle LSC users actions (Like, RT) and update the COCA'),
+		.setDescription('Refresh Twitter interactions to handle Honors users actions (Like, RT) and update the HONORS'),
     
     async execute(interaction) {
         const start = performance.now()

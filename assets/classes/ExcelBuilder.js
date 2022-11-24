@@ -1,8 +1,7 @@
 const { MessageAttachment } = require('discord.js');
 const fs = require('fs')
 const ExcelJS = require('exceljs');
-const TournamentRegistration = require('../classes/TournamentRegistration');
-const LSCUser = require('../classes/LSCUser');
+const HonorsUser = require('../classes/HonorsUser');
 const Tweet = require('../classes/Tweet');
 
 /**
@@ -11,7 +10,7 @@ const Tweet = require('../classes/Tweet');
 class ExcelBuilder {
 
     // Constructor
-    // Takes _report parameter. Possible values are 'tournament', 'coca' or tweet
+    // Takes _report parameter. Possible values are 'honors' or tweet
     constructor(_report) {
         this.report = _report;
         this.filePath = './tmp/Export_' + _report + '_' + new Date().toISOString().split('T')[0] + '.xlsx'
@@ -20,8 +19,8 @@ class ExcelBuilder {
 
     // Create MessageAttachment with asked excel file
     async export() {
-        this.workbook.creator = 'Luchadores.io';
-        this.workbook.lastModifiedBy = 'Luchadores.io';
+        this.workbook.creator = 'Paladin';
+        this.workbook.lastModifiedBy = 'Paladin';
         this.workbook.created = new Date();
         this.workbook.modified = new Date();
         this.workbook.lastPrinted = new Date();
@@ -38,30 +37,14 @@ class ExcelBuilder {
 
     // Get excel's sheet header
     getHeader() {
-        if (this.report == 'tournament') {
-            return [
-                { header: 'Discord ID', key: 'discord_id', width: 20 },
-                { header: 'Discord username', key: 'discord_username', width: 30 },
-                { header: 'Wallet', key: 'wallet', width: 50 },
-                { header: 'NFT ID', key: 'nft_id', width: 10 },
-                { header: 'Strength', key: 'strength', width: 10 },
-                { header: 'Defense', key: 'defense', width: 10 },
-                { header: 'Skill', key: 'skill', width: 10 },
-                { header: 'Speed', key: 'speed', width: 10 },
-                { header: 'Skill 1', key: 'skill_1', width: 15 },
-                { header: 'Skill 2', key: 'skill_2', width: 15 },
-                { header: 'Skill_3', key: 'skill_3', width: 15 },
-                { header: 'Passive skill', key: 'passive_skill', width: 15 },
-                { header: 'Registration date', key: 'registration_date', width: 15, autoFmax: 'M1' },
-            ];
-        } else if (this.report == 'coca') {
+        if (this.report == 'honors') {
             return [
                 { header: 'Discord ID', key: 'discord_id', width: 20 },
                 { header: 'Discord username', key: 'discord_username', width: 30 },
                 { header: 'Twitter username', key: 'twitter_username', width: 30 },
                 { header: 'Wallet', key: 'wallet', width: 50 },
                 { header: 'Registration date', key: 'registration_date', width: 15 },
-                { header: 'Coca', key: 'coca', width: 10, autoFmax: 'F1'},
+                { header: 'Honors', key: 'honors', width: 10, autoFmax: 'F1'},
             ];
         } else if (this.report == 'tweet') {
             return [
@@ -77,27 +60,8 @@ class ExcelBuilder {
     // Get excel's sheet rows
     async getRows() {
         let rows = [];
-        if (this.report == 'tournament') {
-            let registrations = await TournamentRegistration.getAllRegistrations();
-            for (let registration of registrations) {
-                rows.push([
-                    registration.discord_id,
-                    registration.discord_username,
-                    registration.wallet,
-                    Number(registration.nft_id),
-                    Number(registration.strength),
-                    Number(registration.defense),
-                    Number(registration.skill),
-                    Number(registration.speed),
-                    registration.skill_1,
-                    registration.skill_2,
-                    registration.skill_3,
-                    registration.passive_skill,
-                    registration.registration_date
-                ]);
-            }
-        } else if (this.report == 'coca') {
-            let users = await LSCUser.getAllUsers();
+        if (this.report == 'honors') {
+            let users = await HonorsUser.getAllUsers();
             for (let user of users) {
                 rows.push([
                     user.discord_id,
@@ -105,7 +69,7 @@ class ExcelBuilder {
                     user.twitter_username,
                     user.wallet,
                     user.registration_date,
-                    await user.getCoca()
+                    await user.getHonors()
                 ]);
             }
         } else if (this.report == 'tweet') {

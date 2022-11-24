@@ -1,8 +1,8 @@
--- Table: public.users
+-- Table: paladin.users
 
--- DROP TABLE IF EXISTS public.users;
+-- DROP TABLE IF EXISTS paladin.users;
 
-CREATE TABLE IF NOT EXISTS public.users
+CREATE TABLE IF NOT EXISTS paladin.users
 (
     wallet text COLLATE pg_catalog."default" NOT NULL,
     twitter_username text COLLATE pg_catalog."default" NOT NULL,
@@ -15,5 +15,5 @@ CREATE TABLE IF NOT EXISTS public.users
 
 TABLESPACE pg_default;
 
-ALTER TABLE IF EXISTS public.users
-    OWNER to luchadores;
+ALTER TABLE IF EXISTS paladin.users
+    OWNER to paladin;

@@ -1,19 +1,20 @@
 const { db } = require('../db/db');
 
 /*
-    CocaCampaign class.
-    Used to register new Coca campaigns (Zapper, meme, fan art, ...)
+    HonorsCampaign class.
+    Used to register new Honors campaigns (Zapper, meme, fan art, ...)
  */
-class CocaCampaign {
+class HonorsCampaign {
 
     // Constructor
-    constructor(_discord_username, _discord_id, _creation_date, _name, _description, _coca) {
+    constructor(_discord_username, _discord_id, _creation_date, _name, _description, _honors, _is_running) {
         this.discord_username = _discord_username;
         this.discord_id = _discord_id;
         this.creation_date = _creation_date;
         this.name = _name;
         this.description = _description;
-        this.coca = _coca;
+        this.honors = _honors;
+        this.is_running = _is_running;
     }
 
     // Persist if needed, else update
@@ -29,8 +30,8 @@ class CocaCampaign {
     async insert() {
         console.log('insert campaign ' + this.name);
         db.any(
-            'insert into public.coca_campaign(discord_username, discord_id, creation_date, name, description, coca) values($1, $2, $3, $4, $5, $6)',
-                [this.discord_username, this.discord_id, this.creation_date, this.name, this.description, this.coca])
+            'insert into paladin.honors_campaign(discord_username, discord_id, creation_date, name, description, honors, is_running) values($1, $2, $3, $4, $5, $6, $7)',
+                [this.discord_username, this.discord_id, this.creation_date, this.name, this.description, this.honors, this.is_running])
             .then((result) => {
                 console.log(this.name + " inserted !");
             })
@@ -39,12 +40,12 @@ class CocaCampaign {
             });
     }
 
-    // Update the campaign. Only description and coca can be updated
+    // Update the campaign. Only description, honors and is_running can be updated
     async update() {
         console.log('update campaign ' + this.name);
         db.any(
-            'update public.coca_campaign set description = $1, coca = $2 where name = $3',
-                [this.description, this.coca, this.name])
+            'update paladin.honors_campaign set description = $1, honors = $2, is_running = $3 where name = $4',
+                [this.description, this.honors, this.is_running, this.name])
             .then((result) => {
                 console.log(this.name + " updated !");
             })
@@ -56,7 +57,7 @@ class CocaCampaign {
     // Check if current campaign is already persisted
     async isAlreadyPersisted() {
         console.log('check if campaign already persisted ' + this.name);
-        let pTweet = await db.any('select * from public.coca_campaign where name = $1', this.name);
+        let pTweet = await db.any('select * from paladin.honors_campaign where name = $1', this.name);
         if (await pTweet.length > 0) {
             return true;
         } else {
@@ -66,16 +67,17 @@ class CocaCampaign {
 
     // Get all tracked campaigns
     static async getAllCampaigns() {
-        let dbCampaigns = await db.any('select * from public.coca_campaign');
+        let dbCampaigns = await db.any('select * from paladin.honors_campaign');
         let campaigns = [];
         for (let dbCampaign of dbCampaigns) {
-            let campaign = new CocaCampaign(
+            let campaign = new HonorsCampaign(
                 dbCampaign.discord_username,
                 dbCampaign.discord_id,
                 dbCampaign.creation_date,
                 dbCampaign.name,
                 dbCampaign.description,
-                dbCampaign.coca
+                dbCampaign.honors,
+                dbCampaign.is_running
             );
             campaigns.push(campaign);
         }
@@ -85,16 +87,17 @@ class CocaCampaign {
     // Find campaign by name
     static async getCampaignByName(_name) {
         console.log('search campaign ' + _name);
-        let pCampaign = await db.any('select * from public.coca_campaign where name = $1', _name);
+        let pCampaign = await db.any('select * from paladin.honors_campaign where name = $1', _name);
         let campaign;
         if (pCampaign.length > 0) {
-            let campaign =  new CocaCampaign(
+            let campaign =  new HonorsCampaign(
                 await pCampaign[0].discord_username,
                 await pCampaign[0].discord_id,
                 await pCampaign[0].creation_date,
                 await pCampaign[0].name,
                 await pCampaign[0].description,
-                await pCampaign[0].coca,
+                await pCampaign[0].honors,
+                await pCampaign[0].is_running
             );
             return campaign;
         } else {
@@ -105,7 +108,7 @@ class CocaCampaign {
 
     static async getCmdOptions() {
         let choices = [];
-        let pCampaigns = await CocaCampaign.getAllCampaigns();
+        let pCampaigns = await HonorsCampaign.getAllCampaigns();
         for (let campaign of pCampaigns) {
             choices.push([campaign.name, campaign.name]);
         }
@@ -114,4 +117,4 @@ class CocaCampaign {
 
 }
 
-module.exports = CocaCampaign;
+module.exports = HonorsCampaign;

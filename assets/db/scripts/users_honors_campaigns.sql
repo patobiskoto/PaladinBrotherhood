@@ -1,8 +1,8 @@
--- Table: public.users_coca_campaigns
+-- Table: paladin.users_honors_campaigns
 
--- DROP TABLE IF EXISTS public.users_coca_campaigns;
+-- DROP TABLE IF EXISTS paladin.users_honors_campaigns;
 
-CREATE TABLE IF NOT EXISTS public.users_coca_campaigns
+CREATE TABLE IF NOT EXISTS paladin.users_honors_campaigns
 (
     creator_discord_id text COLLATE pg_catalog."default" NOT NULL,
     creator_discord_username text COLLATE pg_catalog."default" NOT NULL,
@@ -15,5 +15,5 @@ CREATE TABLE IF NOT EXISTS public.users_coca_campaigns
 
 TABLESPACE pg_default;
 
-ALTER TABLE IF EXISTS public.users_coca_campaigns
-    OWNER to luchadores;
+ALTER TABLE IF EXISTS paladin.users_honors_campaigns
+    OWNER to paladin;

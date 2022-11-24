@@ -2,7 +2,7 @@ const { db } = require('../db/db');
 
 /*
     Tweet class.
-    Used to register tweets to track for coca calculation
+    Used to register tweets to track for honors calculation
  */
 class Tweet {
 
@@ -29,7 +29,7 @@ class Tweet {
     async insert() {
         console.log('insert tweet ' + this.tweet_id);
         db.any(
-            'insert into public.tweets(author_id, author_name, author_username, tweet_created_at, tweet_text, tweet_id) values($1, $2, $3, $4, $5, $6)',
+            'insert into paladin.tweets(author_id, author_name, author_username, tweet_created_at, tweet_text, tweet_id) values($1, $2, $3, $4, $5, $6)',
                 [this.author_id, this.author_name, this.author_username, this.tweet_created_at, this.tweet_text, this.tweet_id])
             .then((result) => {
                 console.log(this.tweet_id + " inserted !");
@@ -43,7 +43,7 @@ class Tweet {
     async update() {
         console.log('update tweet ' + this.tweet_id);
         db.any(
-            'update public.tweets set author_id = $1, author_name = $2, author_username = $3, tweet_created_at = $4, tweet_text = $5 where tweet_id = $6',
+            'update paladin.tweets set author_id = $1, author_name = $2, author_username = $3, tweet_created_at = $4, tweet_text = $5 where tweet_id = $6',
                 [this.author_id, this.author_name, this.author_username, this.tweet_created_at, this.tweet_text, this.tweet_id])
             .then((result) => {
                 console.log(this.tweet_id + " updated !");
@@ -56,7 +56,7 @@ class Tweet {
     // Check if current tweet is already persisted
     async isAlreadyPersisted() {
         console.log('check if tweet already persisted ' + this.tweet_id);
-        let pTweet = await db.any('select * from public.tweets where tweet_id = $1', this.tweet_id);
+        let pTweet = await db.any('select * from paladin.tweets where tweet_id = $1', this.tweet_id);
         if (await pTweet.length > 0) {
             return true;
         } else {
@@ -66,7 +66,12 @@ class Tweet {
 
     // Get all tracked tweets
     static async getAllTweets() {
-        return await db.any('select * from public.tweets');
+        return await db.any('select * from paladin.tweets');
+    }
+
+    // Remove all followed tweets
+    static async removeAllTweets() {
+        return await db.any('delete from paladin.tweets');
     }
 
 }

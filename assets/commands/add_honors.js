@@ -1,26 +1,26 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
-const CocaCampaign = require('../classes/CocaCampaign');
-const LSCUserCocaCampaign = require('../classes/LSCUserCocaCampaign');
-const LSCUser = require('../classes/LSCUser');
+const HonorsCampaign = require('../classes/HonorsCampaign');
+const HonorsUserCampaign = require('../classes/HonorsUserCampaign');
+const HonorsUser = require('../classes/HonorsUser');
 
 /*
-    Command /add_coca [user] [campaign] [comment]
-    Used to add new Coca to selected  LSC user for selected Coca campaign
+    Command /add_honors [user] [campaign] [comment]
+    Used to add new Honors to selected  Honors user for selected Honors campaign
 */
 module.exports = {
 
 	data: new SlashCommandBuilder()
 
-		.setName('add_coca')
-		.setDescription('Add Coca for provided LSC User')
+		.setName('add_honors')
+		.setDescription('Add Honors for provided Honors User')
         .addUserOption(option => 
             option.setName('user')
-                .setDescription('The LSC user')
+                .setDescription('The Honors user')
                 .setRequired(true)
         )
         .addStringOption(option =>
             option.setName('campaign')
-                .setDescription('Selected coca campaign')
+                .setDescription('Selected honors campaign')
                 .setRequired(true)
                 .setAutocomplete(true)
         )
@@ -39,13 +39,13 @@ module.exports = {
         let discordUserId = user.id;
         let discordUserName = user.username + '#' + user.discriminator;
 
-        let lscUser = await LSCUser.getUserByID(user.id);
-        if (lscUser == undefined) {
-            await interaction.reply({ content: 'Selected user is not a LSC Member', ephemeral: true });
+        let honorsUser = await HonorsUser.getUserByID(user.id);
+        if (honorsUser == undefined) {
+            await interaction.reply({ content: 'Selected user is not a Honors Member', ephemeral: true });
             return;
         }
 
-        let lscUserCampaign = new LSCUserCocaCampaign(
+        let honorsUserCampaign = new HonorsUserCampaign(
             creatorUserId,
             creatorUserName,
             new Date().toISOString().split('T')[0],
@@ -55,7 +55,7 @@ module.exports = {
             comments
         )
 
-        await lscUserCampaign.persist();
+        await honorsUserCampaign.persist();
 
         await interaction.reply(
             { 
@@ -66,12 +66,19 @@ module.exports = {
     },
     async autoComplete(interaction) {
         let response = [];
-        for (let campaign of await CocaCampaign.getAllCampaigns()) {
-            response.push({
-                name: campaign.name,
-                value: campaign.name
-            });
+        for (let campaign of await HonorsCampaign.getAllCampaigns()) {
+            if (campaign.is_running == true) {
+                response.push({
+                    name: campaign.name,
+                    value: campaign.name
+                });
+            }
         }
-        interaction.respond(response);
+        if (response == undefined) {
+            interaction.reply({ content: 'No campaign found !', ephemeral: true });
+        } else {
+            interaction.respond(response);
+        }
+        
     }
 };
