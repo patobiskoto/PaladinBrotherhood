@@ -67,11 +67,12 @@ module.exports = {
         await user.persist();
 
         // Check if the user is well persisted and add the Honors discord role
-        user = await HonorsUser.getUserByID(interaction.user.id);
+        // DISABLED : issue with Paladin discord permissions
+        /*user = await HonorsUser.getUserByID(interaction.user.id);
         if (user != null) {
             let role = await interaction.guild.roles.fetch(process.env.HONORS_ROLE_ID);
-            interaction.member.roles.add(role);
-        }
+            interaction.member.roles.add(role).catch(console.error);
+        }*/
         await interaction.reply(
             { 
                 content: "Congratulations " + interaction.user.username

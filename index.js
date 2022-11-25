@@ -3,9 +3,9 @@ require("dotenv").config();
 const fs = require('node:fs');
 const nodeCron = require('node-cron');
 const Twitter = require('./assets/classes/Twitter')
-const { Client, Intents, Collection, Constants } = require('discord.js');
+const { Client, GatewayIntentBits, Collection, Constants } = require('discord.js');
 
-const discordClient = new Client({ partials: ["CHANNEL"], intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES, Intents.FLAGS.GUILD_PRESENCES] });
+const discordClient = new Client({ partials: ["CHANNEL"], intents: [GatewayIntentBits.Guilds, GatewayIntentBits.DirectMessages, GatewayIntentBits.GuildMembers, GatewayIntentBits.GuildMessages, GatewayIntentBits.MessageContent] });
 
 discordClient.commands = new Collection();
 const commandFiles = fs.readdirSync('./assets/commands').filter(file => file.endsWith('.js'));
@@ -15,7 +15,7 @@ for (const file of commandFiles) {
     discordClient.commands.set(command.data.name, command);
 }
 
-discordClient.once(Constants.ShardEvents.READY, async () => {
+discordClient.once('ready', async () => {
 	console.log(`Logged in as ${discordClient.user.tag}!`);
 });
 
@@ -24,7 +24,7 @@ discordClient.once(Constants.ShardEvents.READY, async () => {
 //	Twitter.refreshTwitter();
 //});
 
-discordClient.on(Constants.Events.INTERACTION_CREATE, async interaction => {
+discordClient.on('interactionCreate', async interaction => {
 	if (interaction.channel.type == 'DM') return;
 	if (interaction.isCommand() || interaction.isAutocomplete()) {
 		const command = discordClient.commands.get(interaction.commandName);
