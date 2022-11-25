@@ -2,12 +2,12 @@
   "name": "PaladinBrotherhoodBot",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "paladinbot.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "register": "node -r dotenv/config deploy-commands.js",
     "unregister": "node -r dotenv/config remove-commands.js",
-    "start": "nodemon index.js"
+    "start": "nodemon paladinbot.js"
   },
   "keywords": [],
   "author": "",
