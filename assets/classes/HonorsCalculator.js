@@ -1,6 +1,7 @@
 const HonorsUserTweet = require('./HonorsUserTweet');
 const HonorsCampaign = require('./HonorsCampaign');
 const HonorsUserCampaign = require('./HonorsUserCampaign');
+const UsersHonorsAdmin = require('./UsersHonorsAdmin');
 
 /**
  * Class used to handle Honors calculation
@@ -27,6 +28,12 @@ const HonorsUserCampaign = require('./HonorsUserCampaign');
                 honors += +honorsCampaign.honors;
             }
         }
+        // Honors linked to admin /give
+        let usersHonorsAdmins = await UsersHonorsAdmin.getUserHonorsAdmin(_discord_id);
+        for (let userHonorsAdmin of usersHonorsAdmins) {
+            honors += +userHonorsAdmin.honors;
+        }
+
         return honors;
     }
 

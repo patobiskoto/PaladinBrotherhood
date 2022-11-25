@@ -70,6 +70,14 @@ Inputs:
 - Campaign: dropdown list to select a campaign
 - Comment (optional): free text to add a comment
 
+###### /give
+Must be an admin command.
+Used to add new Honors to selected  Honors user.
+
+Inputs: 
+- User: dropdown list to select a user
+- Honors : free text. Honors amount
+
 ###### /honors
 Returns the honors for the current user
 
