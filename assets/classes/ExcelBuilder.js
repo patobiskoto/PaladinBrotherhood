@@ -100,6 +100,7 @@ class ExcelBuilder {
             await this.workbook.xlsx.writeFile(this.filePath);
             return new MessageAttachment(this.filePath);
         } catch (error) {
+            console.log(error);
             throw new Error('Error during export creation !');
         }
     }
