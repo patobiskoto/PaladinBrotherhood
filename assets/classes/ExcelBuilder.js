@@ -1,4 +1,4 @@
-const { MessageAttachment } = require('discord.js');
+const { AttachmentBuilder } = require('discord.js');
 const fs = require('fs')
 const ExcelJS = require('exceljs');
 const HonorsUser = require('../classes/HonorsUser');
@@ -17,7 +17,7 @@ class ExcelBuilder {
         this.workbook = new ExcelJS.Workbook();
     }
 
-    // Create MessageAttachment with asked excel file
+    // Create AttachmentBuilder with asked excel file
     async export() {
         this.workbook.creator = 'Paladin';
         this.workbook.lastModifiedBy = 'Paladin';
@@ -91,14 +91,14 @@ class ExcelBuilder {
         return rows;
     }
 
-    // Create the new MessageAttachment
+    // Create the new AttachmentBuilder
     async getAttachment() {
         try {
             if (!fs.existsSync('./tmp')) {
                 fs.mkdirSync('./tmp');
             }
             await this.workbook.xlsx.writeFile(this.filePath);
-            return new MessageAttachment(this.filePath);
+            return new AttachmentBuilder(this.filePath);
         } catch (error) {
             console.log(error);
             throw new Error('Error during export creation !');
